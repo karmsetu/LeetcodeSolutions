@@ -1,0 +1,23 @@
+{
+    "name": "javascript",
+    "version": "1.0.0",
+    "description": "leetcode solutions ",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node methodChaining.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/karmsetu/LeetcodeSolutions.git"
+    },
+    "author": "Karmsetu",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/karmsetu/LeetcodeSolutions/issues"
+    },
+    "homepage": "https://github.com/karmsetu/LeetcodeSolutions#readme",
+    "dependencies": {
+        "jest": "^29.7.0"
+    }
+}
