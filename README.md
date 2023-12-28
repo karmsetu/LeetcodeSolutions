@@ -18,6 +18,10 @@ Storing the solutions
 
 [ref](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
 
+## Rest param/ multiple args
+
+[rest param](https://levelup.gitconnected.com/how-to-write-function-with-n-number-of-parameters-in-javascript-a916de1be7a2)
+
 # Note
 
 1. apperently for loop is faster than `.map` & `.flatmap` combined [ref](https://leetcode.com/problems/filter-elements-from-array/submissions/1129621871/?envType=study-plan-v2&envId=30-days-of-javascript)
