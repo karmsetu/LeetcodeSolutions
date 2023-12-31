@@ -18,7 +18,9 @@ TimeLimitedCache.prototype.set = function(key, value, duration) {
     const crrArr = this.arrKeyVal
     const crrTime = new Date().getTime()
     let result;
-    if(!crrArr[0]){
+    let hasKeyArr = crrArr.map(item=> Object.keys(item.pair)[0] === key).includes(true)
+    console.log({hasKeyArr})
+    if(crrArr.length === 0 || !hasKeyArr){
         crrArr.push({
                 recordTime: new Date().getTime(),
                 duration: duration,
@@ -27,11 +29,14 @@ TimeLimitedCache.prototype.set = function(key, value, duration) {
         result = false
     } else {
 
-        this.arrKeyVal.map(entry=> {
+        crrArr.forEach(entry=> {
             const pair = entry.pair
             console.log({entry, pair})
         console.log(`forEach`)
         const condition = (crrTime-entry.recordTime)<= entry.duration
+        const objKey = Object.keys(entry.pair)[0]
+        const strKey = String(key)
+        console.log({objKey, strKey}, typeof(objKey), typeof(strKey))
         if (Object.keys(entry.pair)[0] === String(key)) {
             console.log(`key already exists`)
             entry.pair[key] = value;
@@ -40,14 +45,15 @@ TimeLimitedCache.prototype.set = function(key, value, duration) {
             if (condition) {
                 result= true
             } else result= false
-        } else {
-            result = false
-            crrArr.push({
-                recordTime: new Date().getTime(),
-                duration: duration,
-                pair: {[key]: value}
-            })
-        }
+        } 
+        // else {
+        //     result = false
+        //     crrArr.push({
+        //         recordTime: new Date().getTime(),
+        //         duration: duration,
+        //         pair: {[key]: value}
+        //     })
+        // }
     })
     console.log({key, value, duration,crrArr})
 }
@@ -61,7 +67,7 @@ return result
 TimeLimitedCache.prototype.get = function(key) {
     let result;
     const crrTime = new Date().getTime()
-    this.arrKeyVal.forEach(entry=> {
+    result = this.arrKeyVal.map(entry=> {
         const recordTime = entry.recordTime
         const condition = (crrTime - recordTime)<= entry.duration
         const duration =  entry.duration
@@ -72,17 +78,18 @@ TimeLimitedCache.prototype.get = function(key) {
             console.log(`success`)
             if (condition) {
                 console.log(`found the key: ${entry.pair[key]} `)
-                result= entry.pair[key]
+                return entry.pair[key]
             } else {
                 console.log(`the key has elapsed`)
-                result= -1
+                return -1
             }
         } else {
             console.log(`Key was not found in first place`)
-            result= -1
+            return -1
         }
     })
-    return result
+    const trueResult = result.filter(item=> item!=(-1))[0]
+    return trueResult ? trueResult : -1
 };
 
 /** 
@@ -94,6 +101,11 @@ TimeLimitedCache.prototype.count = function() {
     this.arrKeyVal.forEach(entry=> {
         if ((crrTime-entry.recordTime)<= entry.duration) {
             console.log(`count++`)
+            console.log(`
+                duration${entry.duration}
+                recordTime${entry.recordTime}
+                pair:${Object.keys(entry.pair)}:${Object.values(entry.pair)}
+            `)
             count++
         }
     })
@@ -121,21 +133,48 @@ const timeLimitedCache = new TimeLimitedCache()
 // [[], [123456789, 987654321, 250], [123456788, 987654320, 100], [123456788], [123456789], []]
 // [0, 0, 0, 50, 150, 300]
 
-const setting1 = timeLimitedCache.set(123456789, 987654321, 250)
-const setting2 = timeLimitedCache.set(123456788, 987654320, 100)
-console.log({setting1})
-console.log({setting2})
+// const setting1 = timeLimitedCache.set(123456789, 987654321, 250)
+// const setting2 = timeLimitedCache.set(123456788, 987654320, 100)
+// console.log({setting1})
+// console.log({setting2})
+// setTimeout(()=> {
+//     const getting1 = timeLimitedCache.get(123456788)
+//     console.log({getting1})
+// }, 50)
+// setTimeout(()=> {
+//     const getting2 = timeLimitedCache.get(123456789)
+//     console.log({getting2})
+// }, 150)
+// setTimeout(()=> {
+//     const counting = timeLimitedCache.count()
+//     console.log({counting})
+// }, 300)
+// ["TimeLimitedCache", "set", "set", "set", "get", "get", "get", "count", "count"]
+// [[], [100, 200, 300], [200, 300, 300], [300, 400, 300], [100], [200], [300], [], []]
+// [0, 0, 0, 0, 100, 100, 100, 200, 400]
+timeLimitedCache.set(100, 200, 300)
+timeLimitedCache.set(200, 300, 300)
+timeLimitedCache.set(300, 400, 300)
 setTimeout(()=> {
-    const getting1 = timeLimitedCache.get(123456788)
-    console.log({getting1})
-}, 50)
+    const get= timeLimitedCache.get(100)
+    console.log(get)
+}, 100)
 setTimeout(()=> {
-    const getting2 = timeLimitedCache.get(123456789)
-    console.log({getting2})
-}, 150)
+    const get= timeLimitedCache.get(200)
+    console.log(get)
+}, 100)
 setTimeout(()=> {
-    const counting = timeLimitedCache.count()
-    console.log({counting})
-}, 300)
+    const get= timeLimitedCache.get(300)
+    console.log(get)
+}, 100)
+setTimeout(()=> {
+    const count= timeLimitedCache.count()
+    console.log(count)
+}, 200)
+setTimeout(()=> {
+    const count= timeLimitedCache.count()
+    console.log(count)
+}, 400)
+
 
 // TODO : RETURN the val with `map` function, dont use for each
