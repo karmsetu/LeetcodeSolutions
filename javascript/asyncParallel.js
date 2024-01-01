@@ -1,17 +1,26 @@
 var promiseAll = async function(functions) {
-    let result = []
-    for (let index = 0; index < functions.length; index++) {
-        try {
-            const fn = functions[index]
-            console.log(fn)
-            const functionToBeReturned = await fn()
-            result.push(functionToBeReturned)
-        } catch (error) {
-            console.error(error)
+    let newPromise = new Promise(async(resolve, reject)=>{
+        let result = []
+        var isError = false
+        for (let index = 0; index < functions.length; index++) {
+            try {
+                const fn = functions[index]
+                console.log(fn)
+                const functionToBeReturned = await fn()
+                result.push(functionToBeReturned)
+                console.log(result)
+            } catch (error) {
+                isError = true
+                reject(error)
+                break
+            }
         }
-    }
-    console.log(result)
-    return result
+        if(!isError) {resolve(result)}
+    }).catch(e => {
+        console.error(e)
+        return e
+    })
+    return newPromise
 };
 
 const functions = [
@@ -22,4 +31,9 @@ const functions = [
     () => new Promise(resolve => setTimeout(() => resolve(10), 150)), 
     () => new Promise(resolve => setTimeout(() => resolve(16), 100))
 ]
-promiseAll(functions)
+
+try {
+    promiseAll(functions)
+} catch (error) {
+    console.error({error})
+}
