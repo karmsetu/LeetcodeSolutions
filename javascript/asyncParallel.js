@@ -1,31 +1,25 @@
-// var promiseAll = async function(functions) {
-//     let resolvedArr = []
-//     for (const fn of functions){
-//         const func = await await fn().then(res => resolvedArr.push(res))
-//         console.log({func})
-//     }
-//     return resolvedArr
-// };
-
 var promiseAll = async function(functions) {
-    return await new Promise(async (resolve, reject)=> {
+    let result = []
+    for (let index = 0; index < functions.length; index++) {
         try {
-            let resolvedArr = []
-            for (const fn of functions){
-                const func = await fn().then(res => resolvedArr.push(res))
-                console.log({func})
-            }
-            return resolvedArr
+            const fn = functions[index]
+            console.log(fn)
+            const functionToBeReturned = await fn()
+            result.push(functionToBeReturned)
         } catch (error) {
-            throw new Error(error)
+            console.error(error)
         }
-    })
+    }
+    console.log(result)
+    return result
 };
 
-
 const functions = [
-    () => new Promise(resolve => setTimeout(() => resolve(5), 200))
+    () => new Promise(resolve => setTimeout(() => resolve(5), 200)),
+    () => new Promise(resolve => setTimeout(() => resolve(1), 200)), 
+    () => new Promise((resolve, reject) => setTimeout(() => reject("Error"), 100)),
+    () => new Promise(resolve => setTimeout(() => resolve(4), 50)), 
+    () => new Promise(resolve => setTimeout(() => resolve(10), 150)), 
+    () => new Promise(resolve => setTimeout(() => resolve(16), 100))
 ]
-
-// const result = await 
-console.log(promiseAll(functions))
+promiseAll(functions)
