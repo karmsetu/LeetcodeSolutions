@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\javascript\\timeLimitCache.js"
+            "program": "${workspaceFolder}\\javascript\\asyncParallel.js"
         }
     ]
 }
